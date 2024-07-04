@@ -4,5 +4,5 @@ client= MongoClient()
 
 db= client.database
 
-collection_name = db["collection_name"]
+collection_name = db["todo_collection"]
 
