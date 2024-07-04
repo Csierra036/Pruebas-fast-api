@@ -35,6 +35,7 @@ async def delete_todo(id: str):
 async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
     return {"username": username}
 
+#------------------------------------------------------------------------------
 #Request FILES
 @router.post("/files/")
 async def create_file(file: Annotated[bytes,File()]): # expects to receive the file as a sequence of bytes
@@ -45,3 +46,19 @@ async def create_file(file: Annotated[bytes,File()]): # expects to receive the f
 @router.post("/files")
 async def create_upload_file(file: UploadFile):
     return{"filename": file.filename}
+
+#Files and Form Method 
+
+@router.post("/files/")
+async def create_file2(
+    file: Annotated[bytes, File()],
+    fileb: Annotated[UploadFile, File()],
+    token: Annotated[str, Form()]
+):
+    return{
+        "file_size": len(file),
+        "token": token,
+        "file_content_type": fileb.content_type
+    }
+
+#-------------------------------------------------------------------------------
