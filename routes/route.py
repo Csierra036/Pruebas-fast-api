@@ -1,8 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter ,Form #Form use for login endpoint
 from models.todos import Todo
 from config.database import collection_name
 from schema.schemas import list_serial
 from bson import ObjectId
+
+from typing import Annotated #use for Forms 
 
 router = APIRouter()
 
@@ -26,3 +28,8 @@ async def put_todo(id: str, todo: Todo):
 @router.delete("/{id}")
 async def delete_todo(id: str):
     collection_name.find_one_and_delete({"_id":ObjectId(id)})
+
+#FORM 
+@router.post("/login/")
+async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+    return {"username": username}
