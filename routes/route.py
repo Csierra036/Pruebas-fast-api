@@ -1,4 +1,5 @@
-from fastapi import APIRouter ,Form #Form use for login endpoint
+#"File" and "UploadFile" are use for Request Files
+from fastapi import APIRouter ,Form , File, UploadFile #Form use for login endpoint
 from models.todos import Todo
 from config.database import collection_name
 from schema.schemas import list_serial
@@ -33,3 +34,14 @@ async def delete_todo(id: str):
 @router.post("/login/")
 async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
     return {"username": username}
+
+#Request FILES
+@router.post("/files/")
+async def create_file(file: Annotated[bytes,File()]): # expects to receive the file as a sequence of bytes
+    return {"file_size": len(file)}
+
+
+#The UploadFile object is used to access file information, such as its name, and is returned in the response.
+@router.post("/files")
+async def create_upload_file(file: UploadFile):
+    return{"filename": file.filename}
