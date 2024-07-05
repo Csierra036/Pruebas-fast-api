@@ -1,5 +1,7 @@
 #"File" and "UploadFile" are use for Request Files
-from fastapi import APIRouter ,Form , File, UploadFile #Form use for login endpoint
+#Form use for login endpoint
+#HTTPException return HTTP responses with errors to the client you use 
+from fastapi import APIRouter ,Form , File, UploadFile, HTTPException
 from models.todos import Todo
 from config.database import collection_name
 from schema.schemas import list_serial
@@ -62,3 +64,14 @@ async def create_file2(
     }
 
 #-------------------------------------------------------------------------------
+
+#Hanligs Errors https://developer.mozilla.org/es/docs/Web/HTTP/Status
+#ERRORS HTTP
+
+@router.get("/search/") #Search no finalized 
+async def read(name: str):
+    todos= list_serial(collection_name.find({"name": name})) #search with names
+    if len(todos) == 0: # len() is used to determine if the variable "todos" has information.
+        raise HTTPException(status_code=404, detail="Name not found")
+    else:
+        return todos
