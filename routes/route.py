@@ -68,7 +68,7 @@ async def create_file2(
 #Hanligs Errors https://developer.mozilla.org/es/docs/Web/HTTP/Status
 #ERRORS HTTP
 
-@router.get("/search/") #Search no finalized 
+@router.get("/search/") 
 async def read(name: str):
     todos= list_serial(collection_name.find({"name": name})) #search with names
     if len(todos) == 0: # len() is used to determine if the variable "todos" has information.
