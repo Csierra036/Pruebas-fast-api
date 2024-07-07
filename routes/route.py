@@ -2,9 +2,9 @@
 #Form use for login endpoint
 #HTTPException return HTTP responses with errors to the client you use 
 from fastapi import APIRouter ,Form , File, UploadFile, HTTPException
-from models.todos import Todo
+from models.todos import Todo , Person
 from config.database import collection_name
-from schema.schemas import list_serial
+from schema.schemas import list_serial, list_person
 from bson import ObjectId
 
 from typing import Annotated #use for Forms 
@@ -15,7 +15,8 @@ router = APIRouter()
 @router.get("/")
 async def get_todo():
     todos = list_serial(collection_name.find())
-    return todos
+    todos2= list_person(collection_name.find())
+    return todos2
 
 #POST Request Method
 @router.post("/")
@@ -49,19 +50,17 @@ async def create_file(file: Annotated[bytes,File()]): # expects to receive the f
 async def create_upload_file(file: UploadFile):
     return{"filename": file.filename}
 
-#Files and Form Method 
+#Form Method 
 
-@router.post("/files/")
-async def create_file2(
-    file: Annotated[bytes, File()],
-    fileb: Annotated[UploadFile, File()],
-    token: Annotated[str, Form()]
-):
-    return{
-        "file_size": len(file),
-        "token": token,
-        "file_content_type": fileb.content_type
+@router.post("/Username")
+async def register_user(name: Annotated[str, Form()], lastname: Annotated[str, Form()], email: Annotated[str, Form()]):
+    user_data ={
+        "name": name,
+        "lastname": lastname,
+        "email": email
     }
+
+    collection_name.insert_one(user_data)
 
 #-------------------------------------------------------------------------------
 
