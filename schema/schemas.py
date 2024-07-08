@@ -13,9 +13,9 @@ def list_serial(todos)->list:
 def individual_person(person) ->dict:
     return{
         "id": str(person["_id"]),
-        "name": person["name"],
-        "lastname": person["lastname"],
-        "email": person["email"]
+        "name": str(person["name"]),
+        "lastname": str(person["lastname"]),
+        "email": str(person["email"])
     }
 
 def list_person(persons) ->list:

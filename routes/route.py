@@ -11,12 +11,33 @@ from typing import Annotated #use for Forms
 
 router = APIRouter()
 
-#GET Request Method
-@router.get("/")
-async def get_todo():
+
+#-------------------------------------------------------------------------------
+
+#GET Request Method (all the items designed with class "Todo")
+@router.get("/default")
+async def get_all():
     todos = list_serial(collection_name.find())
+    return todos
+
+#GET Request Method (all the items designed with class "Person")
+@router.get("/SearchAllUser")
+async def get_all_persons():
     todos2= list_person(collection_name.find())
     return todos2
+
+#Hanligs Errors https://developer.mozilla.org/es/docs/Web/HTTP/Status
+#ERRORS HTTP
+#GET Request Method (one the items designed with class "Person")
+@router.get("/search_USER/") 
+async def read_name_user(name: str):
+    todos= list_person(collection_name.find({"name": name})) #search with names
+    if len(todos) == 0: # len() is used to determine if the variable "todos" has information.
+        raise HTTPException(status_code=404, detail="Name not found")
+    else:
+        return todos
+
+#-------------------------------------------------------------------------------------------
 
 #POST Request Method
 @router.post("/")
@@ -59,18 +80,6 @@ async def register_user(name: Annotated[str, Form()], lastname: Annotated[str, F
         "lastname": lastname,
         "email": email
     }
-
     collection_name.insert_one(user_data)
 
-#-------------------------------------------------------------------------------
 
-#Hanligs Errors https://developer.mozilla.org/es/docs/Web/HTTP/Status
-#ERRORS HTTP
-
-@router.get("/search/") 
-async def read(name: str):
-    todos= list_serial(collection_name.find({"name": name})) #search with names
-    if len(todos) == 0: # len() is used to determine if the variable "todos" has information.
-        raise HTTPException(status_code=404, detail="Name not found")
-    else:
-        return todos
